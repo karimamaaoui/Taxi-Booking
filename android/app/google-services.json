@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "513360122323",
+    "project_id": "uber-18f18",
+    "storage_bucket": "uber-18f18.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513360122323:android:21e04e18a7f15243551f26",
+        "android_client_info": {
+          "package_name": "com.taxi.taxi2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513360122323-lq1tlal5p8dup5c7ui9pdcfe5r04k5b7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV32QPLujmRF4Gf6IX8y8G_5vKu5cTaA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513360122323-lq1tlal5p8dup5c7ui9pdcfe5r04k5b7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
