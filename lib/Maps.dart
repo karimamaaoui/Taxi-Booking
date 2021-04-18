@@ -1,13 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong/latlong.dart';
+import 'package:taxi2/MainScreen.dart';
 
-class Maps extends StatefulWidget{
+
+
+class Maps extends StatefulWidget {
   @override
-  _Maps createState() => _Maps();
-
-
+  _MapseState createState() => _MapseState();
 }
 
-class _Maps extends State<Maps> {
+class _MapseState extends State<Maps> {
+  Position currentPosition;
+  var geoLocator= Geolocator();
+  void locatePosition()async
+  {
+    Position position=await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    this.currentPosition=position;
+    LatLng latLatPosition=LatLng(position.latitude,position.longitude);
+    //CameraPosition cameraPosition=new CameraPositon(target);
+    
+  }
+
+  /*static final  CameraPosition _kGooglePlex= CameraPosition(
+    target:
+  )*/
+
   @override
   Widget build(BuildContext context) {
     void moveToTheLastScreen()
@@ -18,35 +38,29 @@ class _Maps extends State<Maps> {
         onWillPop :(){
           moveToTheLastScreen();
         },
+
         child: Scaffold(
-            appBar: AppBar(title: Text("Customer Side"),
-              backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
-              leading: IconButton(icon: Icon(Icons.arrow_back),
-                  onPressed: (){moveToTheLastScreen();}
-              ),
+          appBar: AppBar(title: Text(''),
+            backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
+            leading: IconButton(icon: Icon(Icons.arrow_back),
+                onPressed: (){moveToTheLastScreen();}
             ),
-            body: Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration:BoxDecoration(image: DecorationImage(image:
-              AssetImage('assets/yellow.jpg'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(Colors.yellow, BlendMode.colorDodge)
-              ),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text("Welcome",style: TextStyle(fontSize: 35),),
-                  ],
-                ),
-              ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.logout),
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                          (route) => false);
+                },
+              )
+            ],
+          ),
 
-            )
-        )
+    )
     );
-
   }
 
 }
-

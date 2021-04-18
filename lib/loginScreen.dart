@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:taxi2/Home.dart';
 import 'package:taxi2/Maps.dart';
 import 'package:taxi2/main.dart';
 import 'package:taxi2/verifyWithNumber.dart';
@@ -15,6 +16,7 @@ class loginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<loginScreen> {
+  bool passwordVisible=true;
 
   TextEditingController emailTextEditingController=TextEditingController();
   TextEditingController passwordTextEditingController=TextEditingController();
@@ -33,7 +35,8 @@ class _LoginScreenState extends State<loginScreen> {
         backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
         leading: IconButton(icon: Icon(Icons.arrow_back),
         onPressed: (){moveToTheLastScreen();}
-        ),),
+        ),
+        ),
         body:
         Container(
              height: double.infinity,
@@ -85,7 +88,7 @@ class _LoginScreenState extends State<loginScreen> {
                   ),
                       TextFormField(
                     controller: passwordTextEditingController,
-                    obscureText: true,
+                    obscureText: this.passwordVisible,
                     decoration: InputDecoration(
                     labelText: "Password",
                     labelStyle: TextStyle(fontSize: 14
@@ -94,6 +97,16 @@ class _LoginScreenState extends State<loginScreen> {
                     color:Colors.grey,
                     fontSize:10.0,
                       ),
+                        suffixIcon:
+                        IconButton(
+                          icon: Icon(this.passwordVisible? Icons.visibility:Icons.visibility_off),
+                          onPressed: (){
+                            setState(() {
+                              this.passwordVisible=!this.passwordVisible;
+                            });
+
+                          },
+                        ),
                     ),
                   ),  SizedBox(height:20.0,),
                   RaisedButton(
@@ -117,7 +130,7 @@ class _LoginScreenState extends State<loginScreen> {
                         Login(context);
                       }
                     }
-                  )
+                  ),
                 ],
           ),
               ), FlatButton (
@@ -162,7 +175,7 @@ Login(BuildContext ctx1)async
     {
       if(snap.value!=null)
         {
-          Navigator.pushReplacement(ctx1, MaterialPageRoute(builder: (context)=>Maps()));
+          Navigator.pushReplacement(ctx1, MaterialPageRoute(builder: (context)=>Home()));
           displayToastMessage("You are logged now  ",ctx1);
 
         }

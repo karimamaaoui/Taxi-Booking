@@ -2,18 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taxi2/Home.dart';
-import 'package:taxi2/Maps.dart';
-import 'package:taxi2/loginScreen.dart';
+import 'package:taxi2/loginScreenDriver.dart';
 import 'package:taxi2/main.dart';
-import 'package:taxi2/user.dart';
-import 'package:taxi2/verifyWithNumber.dart';
 import 'LoginPhone.dart';
-class RegisterScreen extends StatefulWidget {
+class RegisterScreenDriver extends StatefulWidget {
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _RegisterScreenDriverState createState() => _RegisterScreenDriverState();
 
 }
-class _RegisterScreenState extends State<RegisterScreen>{
+class _RegisterScreenDriverState extends State<RegisterScreenDriver>{
   bool passwordVisible=true;
 
   TextEditingController nameTextEditingController=TextEditingController();
@@ -35,7 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
         },
 
         child: Scaffold(
-          appBar: AppBar(title: Text("Customer Side"),
+          appBar: AppBar(title: Text("Driver Side"),
             backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
             leading: IconButton(icon: Icon(Icons.arrow_back),
                 onPressed: (){moveToTheLastScreen();}
@@ -62,14 +59,14 @@ class _RegisterScreenState extends State<RegisterScreen>{
                           children: [
                             SizedBox(height:5.0),
                             Image(
-                              image: AssetImage("assets/images/taxi.png"),
+                              image: AssetImage("assets/driver.jpg"),
                               width:290.0,
                               height:150.0,
                               alignment:Alignment.center,
 
                             ),
                             SizedBox(height:5.0,),
-                            Text("Create new Customer account ",style: TextStyle(fontSize: 32,color: Color.fromRGBO(240, 160, 50, 1.0)),
+                            Text("Create new Driver account ",style: TextStyle(fontSize: 32,color: Color.fromRGBO(240, 160, 50, 1.0)),
                               textAlign: TextAlign.center,),
                             Padding(
                               padding:EdgeInsets.all(20.0),
@@ -89,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                                       ),
                                     ),
                                   ),
-                                 TextFormField(
+                                  TextFormField(
                                     controller:emailTextEditingController,
                                     keyboardType:TextInputType.emailAddress,
                                     decoration: InputDecoration(
@@ -103,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                                     ),
 
 
-                                 ),
+                                  ),
                                   TextFormField(
                                     controller: passwordTextEditingController,
                                     obscureText: this.passwordVisible,
@@ -136,26 +133,26 @@ class _RegisterScreenState extends State<RegisterScreen>{
                                     ),
                                     onPressed: ()async{
                                       if (nameTextEditingController.text.length < 3)
-                                        {
-                                          displayToastMessage("Name must be at least 3 caracters ",context);
-                                        }
+                                      {
+                                        displayToastMessage("Name must be at least 3 caracters ",context);
+                                      }
                                       else if(!emailTextEditingController.text.contains('@'))
-                                        {
+                                      {
 
-                                            displayToastMessage("Email address invalid ",context);
+                                        displayToastMessage("Email address invalid ",context);
 
-                                        }
+                                      }
                                       else if (passwordTextEditingController.text.length<6)
-                                        {
+                                      {
 
-                                          displayToastMessage("Password must be at least 6 caracters ",context);
-                                        }
+                                        displayToastMessage("Password must be at least 6 caracters ",context);
+                                      }
                                       else
-                                        {
-                                          registerNew(context);
-                                         
+                                      {
+                                        registerNew(context);
 
-                                        }
+
+                                      }
                                     },
                                   )
                                 ],
@@ -165,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                               onPressed:()
                               {
                                 Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context)=>loginScreen()));
+                                    MaterialPageRoute(builder: (context)=>loginScreenDriver()));
 
                               },child: Text("Already have an account ? Login here"),
 
@@ -208,7 +205,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
   final FirebaseAuth _firebaseAuth=FirebaseAuth.instance;
   registerNew(BuildContext ctx)async
   {
-    final User _newcus = (await _firebaseAuth.createUserWithEmailAndPassword
+    final User _newdriv = (await _firebaseAuth.createUserWithEmailAndPassword
       (email: emailTextEditingController.text,
         password: passwordTextEditingController.text
     ).catchError((errMsg){
@@ -216,23 +213,23 @@ class _RegisterScreenState extends State<RegisterScreen>{
     })
     ).user;
 
-    if (_newcus!=null)
+    if (_newdriv!=null)
     {
       Map cusDataMap={
-          "name":nameTextEditingController.text.trim(),
-          "email":emailTextEditingController.text.trim(),
-          "password":passwordTextEditingController.text.trim(),
-        };
-        usersRef.child(_newcus.uid).set(cusDataMap);
-        displayToastMessage("New Customer account has created ",ctx);
+        "name":nameTextEditingController.text.trim(),
+        "email":emailTextEditingController.text.trim(),
+        "password":passwordTextEditingController.text.trim(),
+      };
+      usersRef2.child(_newdriv.uid).set(cusDataMap);
+      displayToastMessage("New Driver account has created ",ctx);
 
-        Navigator.pushReplacement(ctx, MaterialPageRoute(builder: (context)=>Home()));
+      Navigator.pushReplacement(ctx, MaterialPageRoute(builder: (context)=>Home()));
 
-      }
+    }
     else
-      {
-        displayToastMessage("New Customer account has not created",ctx);
-      }
+    {
+      displayToastMessage("New Driver account has not created",ctx);
+    }
   }
   displayToastMessage(String message,BuildContext ctx1)
   {

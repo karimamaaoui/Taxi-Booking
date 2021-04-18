@@ -29,6 +29,13 @@ dependencies:
   firebase_auth_platform_interface: ^4.0.0
   fluttertoast: ^8.0.3
   international_phone_input: ^1.0.2
+  pinput: ^1.2.0
+  geolocator: ^7.0.2
+  latlong: ^0.6.1
+
+
+
+
 
 
 
@@ -59,6 +66,8 @@ flutter:
     - assets/background.jpg
     - assets/yellow.jpg
     - assets/images/taxi.png
+    - assets/locationservice.jpg
+    - assets/driver.jpg
 
 
 

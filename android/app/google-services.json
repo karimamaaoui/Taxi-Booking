@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "513360122323",
+    "firebase_url": "https://uber-18f18-default-rtdb.firebaseio.com",
     "project_id": "uber-18f18",
     "storage_bucket": "uber-18f18.appspot.com"
   },

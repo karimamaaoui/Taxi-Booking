@@ -1,5 +1,9 @@
+import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:international_phone_input/international_phone_input.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import 'Maps.dart';
 
 class verifyWithNumber extends StatefulWidget {
   @override
@@ -7,8 +11,88 @@ class verifyWithNumber extends StatefulWidget {
 }
 
 class _verifyWithNumberState extends State<verifyWithNumber> {
-
+  String numPhone,smsCode,verificationId;
   TextEditingController phoneTextEditingController=TextEditingController();
+  TextEditingController passController = TextEditingController();
+  TextEditingController codeController=TextEditingController();
+
+    signIn(AuthCredential authCredential)
+    {
+      FirebaseAuth.instance.signInWithCredential(authCredential);
+    }
+
+  Future registerUser(String mobile, BuildContext context) async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+
+    final PhoneVerificationCompleted verfiedSuccess=(AuthCredential authResult)
+    {
+      signIn(authResult);
+      print(authResult);
+    };
+    final PhoneVerificationFailed verificationFailed=(FirebaseAuthException exception)
+    {
+      print('${exception.message}');
+    };
+
+    final PhoneCodeSent codeSent=(
+        String verID,[int forceResendingToken])async{
+      this.verificationId=verID;
+    };
+
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout=(String verId){
+      verificationId = verificationId;
+      print(verificationId);
+      print("Timout");
+    };
+
+    _auth.verifyPhoneNumber(
+        phoneNumber: mobile,
+        timeout: Duration(seconds: 60),
+        verificationCompleted:verfiedSuccess,
+        verificationFailed: verificationFailed,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+        codeSent: (String verificationId, [int forceResendingToken]){
+          //show dialog to take input from the user
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => AlertDialog(
+                title: Text("Enter SMS Code"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: codeController,
+                    ),
+
+                  ],
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Done"),
+                    textColor: Colors.white,
+                    color: Colors.redAccent,
+                    onPressed: () {
+                      FirebaseAuth auth = FirebaseAuth.instance;
+                      smsCode = codeController.text.trim();
+                      AuthCredential authC = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+                      _auth.signInWithCredential(authC).then(( authC){
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (context) => Maps()
+                        ));
+                      }).catchError((e){
+                        print(e);
+                      });
+                    },
+                  )
+                ],
+              )
+          );
+        },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final _formkey = GlobalKey<FormState>();
@@ -16,13 +100,6 @@ class _verifyWithNumberState extends State<verifyWithNumber> {
       Navigator.pop(context);
     };
 
-    String _phone;
-    void onPhoneNumberChange(String number, String internationalizedPhoneNumber, String isoCode) {
-      setState(() {
-        _phone = internationalizedPhoneNumber;
-        print(_phone);
-      });
-    }
     return WillPopScope(
         onWillPop: () {
           moveToTheLastScreen();
@@ -63,31 +140,34 @@ class _verifyWithNumberState extends State<verifyWithNumber> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(height:5.0,),
-                                  /*TextField(
+                                  TextField(
                                     controller:phoneTextEditingController,
                                     keyboardType: TextInputType.phone,
                                     decoration: InputDecoration(
-                                      labelText: "Phone number",
-                                      labelStyle: TextStyle(fontSize: 22
+                                      prefixText: "+216 ",
+                                      labelText: "Enter Phone",
+                                      labelStyle: TextStyle(fontSize: 25
                                       ),
                                       hintStyle:TextStyle(
                                         color:Colors.grey,
-                                        fontSize:10.0,
+                                        fontSize:22.0,
                                       ),
                                     ),
                                   ),
-                                  */
-
-                               InternationalPhoneInput(
-                                  decoration: InputDecoration(
-                                      labelText: "Phone number",
-                                      labelStyle: TextStyle(fontSize: 22
-                                      ),),
-                                  onPhoneNumberChange: onPhoneNumberChange,
-                                  initialPhoneNumber: _phone,
-                                  initialSelection: "US",
-                                  showCountryCodes: true
+                                  TextField(
+                                    controller:passController,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    decoration: InputDecoration(
+                                      labelText: "Enter Password",
+                                      labelStyle: TextStyle(fontSize: 25
+                                      ),
+                                      hintStyle:TextStyle(
+                                        color:Colors.grey,
+                                        fontSize:22.0,
+                                      ),
+                                    ),
                                   ),
+
 
                                   SizedBox(height:20.0,),
                                   RaisedButton(
@@ -96,7 +176,17 @@ class _verifyWithNumberState extends State<verifyWithNumber> {
                                       child: Container(
                                         child: Text("Continue",style: TextStyle(fontSize: 18,fontFamily: "Brand Bold"),),
                                       ),
-                                      onPressed: (){
+                                      onPressed: ()async{
+                                        if (phoneTextEditingController.text.length < 6)
+                                        {
+                                          displayToastMessage("Number Phone invalid ",context);
+                                        }
+                                        else
+                                        {
+                                          final mobile = phoneTextEditingController.text.trim();
+                                          registerUser(mobile, context);
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Maps()));
+                                        }
 
                                       }
                                   )
@@ -114,5 +204,92 @@ class _verifyWithNumberState extends State<verifyWithNumber> {
           ),
         ));
 
+
+  }
+
+  /*Future <void> verifyPohne()async{
+    final PhoneCodeAutoRetrievalTimeout autoRetrieve=(String verId){
+      this.verificationId=verId;
+    };
+    final PhoneCodeSent smsCodeSent=(
+        String verID,[int forceResendingToken])async{
+      this.verificationId=verID;
+      setState(() {
+        print("Code sent to $numPhone");
+        print("\n Enter the code sent to " + numPhone);
+
+      });
+    };
+
+    final PhoneVerificationFailed verifiFailed=(FirebaseAuthException exception)
+    {
+      print('${exception.message}');
+    };
+
+    final PhoneVerificationCompleted verfiedSuccess=(AuthCredential authCredential)
+    {
+      print('verified');
+    };
+    final AuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+    );
+
+    /*final User userc = await _firebaseAuth.signInWithCredential(credential).userc;
+    if (userc != null) {
+      setState(() {
+        print( 'Authentication successful');
+      });
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: this.numPhone,
+        codeSent: smsCodeSent,
+        codeAutoRetrievalTimeout: autoRetrieve,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verfiedSuccess,
+        verificationFailed: verifiFailed,
+      );
+*/
+    }
+
+
+    Future <bool> smsCodeDialog(BuildContext ctx2)
+    {
+      var currUser = _firebaseAuth.currentUser;
+      return showDialog(
+        context: ctx2,
+        barrierDismissible: false,
+        builder: (BuildContext ctx2)
+        {
+          return new AlertDialog(
+            title: Text("Enter Sms Code"),
+            content: TextField(
+              onChanged: (value){
+                this.smsCode=value;
+              },
+            ),
+            contentPadding: EdgeInsets.all(10.0),
+            actions: [
+              new FlatButton(
+                child: Text("Done"),
+                onPressed: (){
+                  if(currUser!=null)
+                  {
+                    Navigator.of(ctx2).pop();
+                    Navigator.of(ctx2).pushReplacementNamed('Maps');
+                  }else{
+                    Navigator.of(ctx2).pop();
+                  }
+
+                },
+
+              )
+            ],
+          );
+        },);
+    }*/
+
+
+  displayToastMessage(String message,BuildContext ctx1)
+  {
+    Fluttertoast.showToast(msg: message);
   }
 }

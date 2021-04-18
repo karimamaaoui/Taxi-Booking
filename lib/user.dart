@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taxi2/loginScreenDriver.dart';
 import 'loginScreen.dart';
 
 class user extends StatelessWidget {
@@ -51,7 +52,7 @@ class user extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.2)),
                 onPressed: (){
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context)=>user()));
+                      MaterialPageRoute(builder: (context)=>loginScreenDriver()));
                 },
               ),
 
