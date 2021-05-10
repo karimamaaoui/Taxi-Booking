@@ -30,10 +30,12 @@ dependencies:
   fluttertoast: ^8.0.3
   international_phone_input: ^1.0.2
   pinput: ^1.2.0
-  geolocator: ^7.0.2
   latlong: ^0.6.1
-
-
+  google_maps_flutter: ^2.0.3
+  geolocator: ^7.0.3
+  http: ^0.13.3
+  provider: ^5.0.0
+  geocoder: ^0.2.1
 
 
 
@@ -59,6 +61,7 @@ flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
+  generate: true
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
@@ -68,6 +71,7 @@ flutter:
     - assets/images/taxi.png
     - assets/locationservice.jpg
     - assets/driver.jpg
+    - assets/images/user_icon.png
 
 
 

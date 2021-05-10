@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:taxi2/Forms/NewRegister.dart';
 import 'package:taxi2/Home.dart';
-import 'package:taxi2/RegisterScreenDriver.dart';
+import 'file:///C:/Users/asus/AndroidStudioProjects/taxi2/lib/UsersSide/RegisterScreenDriver.dart';
 import 'package:taxi2/main.dart';
-import 'RegisterScreen.dart';
 
 class loginScreenDriver extends StatefulWidget {
   @override

@@ -3,11 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taxi2/Home.dart';
-import 'package:taxi2/Maps.dart';
+import 'package:taxi2/Widget/progressDialog.dart';
 import 'package:taxi2/main.dart';
-import 'package:taxi2/verifyWithNumber.dart';
 import 'RegisterScreen.dart';
-
 class loginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -16,10 +14,13 @@ class loginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<loginScreen> {
+
+
   bool passwordVisible=true;
 
   TextEditingController emailTextEditingController=TextEditingController();
   TextEditingController passwordTextEditingController=TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final _formkey = GlobalKey<FormState>();
@@ -31,12 +32,17 @@ class _LoginScreenState extends State<loginScreen> {
           moveToTheLastScreen();
         },
         child: Scaffold(
-        appBar: AppBar(title: Text("Customer Side"),
-        backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
-        leading: IconButton(icon: Icon(Icons.arrow_back),
-        onPressed: (){moveToTheLastScreen();}
+        appBar: AppBar(title: Text(
+            'Customer Side',
         ),
+          backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
+          leading: IconButton(icon: Icon(Icons.arrow_back),
+              onPressed: (){moveToTheLastScreen();}
         ),
+
+            ),
+
+
         body:
         Container(
              height: double.infinity,
@@ -66,8 +72,10 @@ class _LoginScreenState extends State<loginScreen> {
                     alignment:Alignment.center,
                       ),
                   SizedBox(height:5.0,),
-                  Text("Connect as a Customer",style: TextStyle(fontSize: 32,color: Color.fromRGBO(240, 160, 50, 1.0)),
-                  textAlign: TextAlign.center,),
+                  Text('Customer as a Customer',
+                    style: TextStyle(fontSize: 32,color: Color.fromRGBO(240, 160, 50, 1.0)),
+                    textAlign: TextAlign.center,),
+
                   Padding(
                     padding:EdgeInsets.all(20.0),
                     child: Column(
@@ -77,7 +85,7 @@ class _LoginScreenState extends State<loginScreen> {
                         controller:emailTextEditingController,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
-                        labelText: "Email",
+                        labelText: "email",
                         labelStyle: TextStyle(fontSize: 14
                         ),
                     hintStyle:TextStyle(
@@ -90,7 +98,7 @@ class _LoginScreenState extends State<loginScreen> {
                     controller: passwordTextEditingController,
                     obscureText: this.passwordVisible,
                     decoration: InputDecoration(
-                    labelText: "Password",
+                    labelText: "password",
                     labelStyle: TextStyle(fontSize: 14
                     ),
                     hintStyle:TextStyle(
@@ -113,7 +121,7 @@ class _LoginScreenState extends State<loginScreen> {
                     color: Colors.yellow,
                     textColor: Colors.white,
                     child: Container(
-                    child: Text("Connect",style: TextStyle(fontSize: 18,fontFamily: "Brand Bold"),),
+                    child: Text('Connect as a Customer',style: TextStyle(fontSize: 18,fontFamily: "Brand Bold"),),
                     ),
                     onPressed: ()async{
                       if(!emailTextEditingController.text.contains('@'))
@@ -162,10 +170,22 @@ displayToastMessage(String message, BuildContext ctx1) {
 }
 Login(BuildContext ctx1)async
 {
+  showDialog(
+      context: ctx1,
+      barrierDismissible: false,
+      builder: (BuildContext context)
+      {
+        return  ProgressDialog(message:"Authentification , Please wait ...");
+      }
+  );
+
+
+
   final User _newcus = (await _firebaseAuth.signInWithEmailAndPassword
   (email: emailTextEditingController.text,
   password: passwordTextEditingController.text
   ).catchError((errMsg){
+    Navigator.pop(context);
     displayToastMessage("Error "+errMsg.toString(), ctx1);
   })
   ).user;
@@ -181,6 +201,7 @@ Login(BuildContext ctx1)async
         }
       else
         {
+          Navigator.pop(context);
           _firebaseAuth.signOut();
           displayToastMessage("No record exists for this Customer .Please create an account  ",ctx1);
 
@@ -191,6 +212,7 @@ Login(BuildContext ctx1)async
   }
   else
   {
+    Navigator.pop(context);
     displayToastMessage("Error occured can not",ctx1);
   }
 

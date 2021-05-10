@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:taxi2/LoginPhone.dart';
 import 'package:taxi2/MainScreen.dart';
 
-import 'Maps.dart';
+import 'Maps/Maps.dart';
 
 
 class Home extends StatefulWidget {

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'user.dart';
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
@@ -39,7 +41,8 @@ class _MainScreenState extends State<MainScreen> {
                       MaterialPageRoute(builder: (context)=>user()));
                 },
               ),
-            )
+
+            ),
           ],
         ),
       ),

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'OPScreen.dart';
 class LoginPhone extends StatefulWidget {
+
+  TextEditingController phoneTextEditingController=TextEditingController();
+  LoginPhone( {phoneTextEditingController});
+
   @override
-  _LoginPhoneState createState() => _LoginPhoneState();
+  _LoginPhoneState createState() => _LoginPhoneState(phoneTextEditingController: phoneTextEditingController);
 }
 
 class _LoginPhoneState extends State<LoginPhone> {
-  TextEditingController _controller = TextEditingController();
+  //TextEditingController _controller = TextEditingController();
+  TextEditingController phoneTextEditingController=TextEditingController();
+  _LoginPhoneState({phoneTextEditingController});
+
+
   @override
   Widget build(BuildContext context) {
     void moveToTheLastScreen() {
@@ -39,7 +47,8 @@ class _LoginPhoneState extends State<LoginPhone> {
             Container(
               margin: EdgeInsets.only(top: 60),
               child: Center(
-                child: Text(
+                child:
+                Text(
                   'Phone Authentication',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
                 ),
@@ -57,7 +66,8 @@ class _LoginPhoneState extends State<LoginPhone> {
                 ),
                 maxLength: 10,
                 keyboardType: TextInputType.number,
-                controller: _controller,
+                controller:phoneTextEditingController,
+
               ),
             ),
             Container(
@@ -71,7 +81,7 @@ class _LoginPhoneState extends State<LoginPhone> {
                 ),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => OTPScreen(_controller.text)));
+                      builder: (context) => OTPScreen(phoneTextEditingController.text)));
                 },
                 ),
               ),

@@ -2,12 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taxi2/Home.dart';
-import 'package:taxi2/Maps.dart';
+import 'package:taxi2/Widget/progressDialog.dart';
 import 'package:taxi2/loginScreen.dart';
 import 'package:taxi2/main.dart';
-import 'package:taxi2/user.dart';
-import 'package:taxi2/verifyWithNumber.dart';
 import 'LoginPhone.dart';
+
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -190,6 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                                 }
                             ),
 
+
                           ],
                         ),
 
@@ -208,10 +208,23 @@ class _RegisterScreenState extends State<RegisterScreen>{
   final FirebaseAuth _firebaseAuth=FirebaseAuth.instance;
   registerNew(BuildContext ctx)async
   {
+    showDialog(
+        context: ctx,
+        barrierDismissible: false,
+        builder: (BuildContext context)
+        {
+          return  ProgressDialog(message:"Registering, Please wait ...");
+        }
+    );
+
+
+
+
     final User _newcus = (await _firebaseAuth.createUserWithEmailAndPassword
       (email: emailTextEditingController.text,
         password: passwordTextEditingController.text
     ).catchError((errMsg){
+      Navigator.pop(context);
       displayToastMessage("Error "+errMsg.toString(), ctx);
     })
     ).user;
@@ -231,6 +244,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
       }
     else
       {
+        Navigator.pop(context);
         displayToastMessage("New Customer account has not created",ctx);
       }
   }
@@ -238,8 +252,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
   {
     Fluttertoast.showToast(msg: message);
   }
-
-
 
 }
 

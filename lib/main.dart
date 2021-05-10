@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'MainScreen.dart';
-
+import 'DataHandle/appData.dart';
 Future <void> main()async
 { WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -14,18 +15,30 @@ DatabaseReference usersRef=FirebaseDatabase.instance.reference().child("Customer
 DatabaseReference usersRef2=FirebaseDatabase.instance.reference().child("Drivers");
 
 
-class MyApp extends StatelessWidget {
-
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+static void setLocale(BuildContext context, Locale newlocale)
+{
+  _MyAppState state=context.findRootAncestorStateOfType<_MyAppState>();
+}
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.yellow,
+
+  _MyAppState createState()=>_MyAppState();
+}
+class  _MyAppState extends State<MyApp>
+{
+
+  @override
+  Widget build(BuildContext flcontext) {
+    return ChangeNotifierProvider(
+      create: (context) => AppData(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Main ',
+        theme: ThemeData(
+          primarySwatch: Colors.yellow,
+        ),
+        home: MainScreen(),
       ),
-      home: MainScreen(),
     );
   }
 }

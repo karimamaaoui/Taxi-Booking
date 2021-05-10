@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'Forms/NewRegister.dart';
 import 'Home.dart';
 class OTPScreen extends StatefulWidget {
   final String phone;
@@ -10,6 +12,7 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
+
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   String _verificationCode;
   final TextEditingController _pinPutController = TextEditingController();
@@ -21,6 +24,7 @@ class _OTPScreenState extends State<OTPScreen> {
       color: const Color.fromRGBO(126, 203, 224, 1),
     ),
   );
+
   @override
   Widget build(BuildContext context) {
     void moveToTheLastScreen() {
@@ -30,6 +34,7 @@ class _OTPScreenState extends State<OTPScreen> {
         onWillPop: () {
           moveToTheLastScreen();
         },
+
         child: Scaffold(
       key: _scaffoldkey,
       appBar: AppBar(
@@ -80,10 +85,13 @@ class _OTPScreenState extends State<OTPScreen> {
                       verificationId: _verificationCode, smsCode: pin))
                       .then((value) async {
                     if (value.user != null) {
+                      _newRegister.registerNew(context);
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => Home()),
                               (route) => false);
+                      displayToastMessage("New  account has created",context);
+
                     }
                   });
                 } catch (e) {
@@ -102,6 +110,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   _verifyPhone() async {
+
     await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: '+216${widget.phone}',
         verificationCompleted: (PhoneAuthCredential credential) async {
@@ -109,10 +118,13 @@ class _OTPScreenState extends State<OTPScreen> {
               .signInWithCredential(credential)
               .then((value) async {
             if (value.user != null) {
+              _newRegister.registerNew(context);
+
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => Home()),
                       (route) => false);
+
             }
           });
         },
@@ -130,12 +142,25 @@ class _OTPScreenState extends State<OTPScreen> {
           });
         },
         timeout: Duration(seconds: 120));
+
+
   }
+
+
+  final _newRegister=NewRegister();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _verifyPhone();
+    //_newRegister.registerNew(context);
+
   }
+
+  displayToastMessage(String message,BuildContext ctx1)
+  {
+    Fluttertoast.showToast(msg: message);
+  }
+
 }
