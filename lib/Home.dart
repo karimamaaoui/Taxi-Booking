@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:taxi2/LocationCustomer/LocationC.dart';
 import 'package:taxi2/LoginPhone.dart';
 import 'package:taxi2/MainScreen.dart';
+import 'package:taxi2/UsersSide/Profiles/Body.dart';
+import 'package:taxi2/UsersSide/Profiles/ProfileScreen.dart';
 
 import 'Maps/Maps.dart';
-
+import 'Maps/ShowMaps.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -96,7 +99,7 @@ class _HomeState extends State<Home> {
                   ),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>Maps()));
+                        builder: (context) =>LocationC()));
                   },
                 ),
               ),
