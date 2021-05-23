@@ -40,6 +40,14 @@ dependencies:
   flutter_google_places: ^0.3.0
   stacked_themes: ^0.3.2
   flutter_svg: ^0.22.0
+  google_maps_webservice: ^0.0.19
+  geocoding: ^2.0.0
+  google_maps_place_picker:
+  flutter_polyline_points: ^1.0.0
+  font_awesome_flutter: ^9.0.0
+
+
+
 
 
 
@@ -81,6 +89,10 @@ flutter:
     - assets/images/profileIcon.png
     - assets/images/camera.jpg
     - assets/images/camera.svg
+    - assets/images/pickPink.png
+    - assets/images/pickGreen.png
+    - assets/images/home.png
+    - assets/images/car.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

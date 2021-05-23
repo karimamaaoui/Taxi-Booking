@@ -12,11 +12,14 @@ static Future<String> getPlace(Position position,context)async
 {
 
 String placeAdress="";
+String st1,st2,st3,st4;
+
 
 Address userPickUpAddress=new Address();
 userPickUpAddress.longitude=position.longitude;
 userPickUpAddress.latitude=position.latitude;
 userPickUpAddress.placeName=placeAdress;
+
 
 Provider.of<AppData>(context,listen: false).updatePickUpLocationAddress(userPickUpAddress);
 print(userPickUpAddress);

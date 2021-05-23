@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taxi2/Forms/NewRegister.dart';
 import 'package:taxi2/Home.dart';
+import 'package:taxi2/Widget/progressDialog.dart';
 import 'file:///C:/Users/asus/AndroidStudioProjects/taxi2/lib/UsersSide/RegisterScreenDriver.dart';
 import 'package:taxi2/main.dart';
 
@@ -161,6 +162,15 @@ class _LoginScreenDriverState extends State<loginScreenDriver> {
   }
   Login(BuildContext ctx1)async
   {
+    showDialog(
+        context: ctx1,
+        barrierDismissible: false,
+        builder: (BuildContext context)
+        {
+          return  ProgressDialog(message:"Authentification , Please wait ...");
+        }
+    );
+
     final User _newdriv = (await _firebaseAuth.signInWithEmailAndPassword
       (email: emailTextEditingController.text,
         password: passwordTextEditingController.text

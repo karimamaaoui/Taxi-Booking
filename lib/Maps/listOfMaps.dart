@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geocoder/model.dart';
+import 'package:taxi2/LocationCustomer/LocationC.dart';
 import 'package:taxi2/Widget/DividerWidget.dart';
 
 class listOfMaps{
 
   Address _address;
+
 
 
   void onBottomPressed(BuildContext context)
@@ -94,7 +97,7 @@ class listOfMaps{
                                   "Currently Place",style: TextStyle(color:Colors.black54,fontSize: 12.0)
                               ),
                               SizedBox(width: 30.0,),
-                              Text(" ${_address?.addressLine??  '-'}",style: TextStyle(color:Colors.black54,fontSize: 12.0),),
+                              Text( "-",style: TextStyle(color:Colors.black54,fontSize: 12.0),),
 
                             ],
                           ),

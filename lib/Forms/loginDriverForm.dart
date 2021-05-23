@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taxi2/Forms/RegisterDriverForm.dart';
 import 'package:taxi2/Forms/loginDriver.dart';
+import 'package:taxi2/Widget/progressDialog.dart';
 
 class loginDriverForm extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _loginDriverFormState extends State<loginDriverForm>{
     return Container(
       child: SingleChildScrollView(
         child: Form(
+
           key: _formkey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +90,9 @@ class _loginDriverFormState extends State<loginDriverForm>{
                                 child: Container(
                                   child: Text("Connect",style: TextStyle(fontSize: 18,fontFamily: "Brand Bold"),),
                                 ),
+
                                 onPressed: ()async{
+
                                   if(!emailTextEditingController.text.contains('@'))
                                   {
                                     displayToastMessage("Email address invalid ",context);
@@ -100,6 +104,7 @@ class _loginDriverFormState extends State<loginDriverForm>{
                                   }
                                   else
                                   {
+
                                     loginDriver();
                                   }
                                 }
