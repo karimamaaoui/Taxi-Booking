@@ -10,6 +10,8 @@ class RegisterForm  extends StatefulWidget {
 
 }
 
+List <String> listOfCountries =<String> ["Tunisia", "Bizerte", "Sousse","Ben Arous"];
+var dropdownValue ;
 
 TextEditingController nameTextEditingController = TextEditingController();
 TextEditingController emailTextEditingController = TextEditingController();
@@ -18,9 +20,13 @@ TextEditingController phoneTextEditingController = TextEditingController();
 
 
 String email, password, name, phone;
+var index;
+
 
 class _RegisterFormState extends State<RegisterForm> {
+
   bool passwordVisible = true;
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +115,26 @@ class _RegisterFormState extends State<RegisterForm> {
 
 
                             ),
+                            Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: DropdownButtonFormField(
+                                items: listOfCountries.map(
+                                        (value) => DropdownMenuItem(
+                                          child:Text(value),
+                                            value:value,
+                                        )).toList(),
+                                onChanged: (selectedCountry){
+                                  setState(() {
+                                    dropdownValue=selectedCountry;
+                                  });
+                                },
+                                value: dropdownValue,
+                                isExpanded: false,
+                                hint: Text('Choose Country'),
+                                 ),
+                            ),
+
+
                             TextFormField(
                               controller: passwordTextEditingController,
                               obscureText: this.passwordVisible,
@@ -135,6 +161,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                 ),
                               ),
                             ), SizedBox(height: 20.0,),
+
                             RaisedButton(
                               color: Colors.yellow,
                               textColor: Colors.white,

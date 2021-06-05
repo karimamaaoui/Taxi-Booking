@@ -7,6 +7,8 @@ import 'package:taxi2/loginScreen.dart';
 import 'package:taxi2/main.dart';
 import 'LoginPhone.dart';
 
+
+///******** Register page ****************///
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -91,6 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                                  TextFormField(
                                     controller:emailTextEditingController,
                                     keyboardType:TextInputType.emailAddress,
+
                                     decoration: InputDecoration(
                                       labelText: "Email",
                                       labelStyle: TextStyle(fontSize: 14
@@ -134,6 +137,8 @@ class _RegisterScreenState extends State<RegisterScreen>{
                                       child: Text("Connect",style: TextStyle(fontSize: 18,fontFamily: "Brand Bold"),),
                                     ),
                                     onPressed: ()async{
+
+                                      // ha4i ghalta raw testa3ml validator mais hne enti 7ata tji ki dialog
                                       if (nameTextEditingController.text.length < 3)
                                         {
                                           displayToastMessage("Name must be at least 3 caracters ",context);

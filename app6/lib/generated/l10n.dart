@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'intl/messages_all.dart';
 
+
+
+///**********ha4a raw mayt7tch hne dima t7ot les fichier dart fel lib
+///**deja nahitha ena mbeed  juste libe mtee taxi app6 zeyda
+///******
 // **************************************************************************
 // Generator: Flutter Intl IDE plugin
 // Made by Localizely

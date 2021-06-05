@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:taxi2/Forms/loginDriverForm.dart';
+
 import 'package:taxi2/loginScreenDriver.dart';
 import 'loginScreen.dart';
+
 
 class user extends StatelessWidget {
   @override
@@ -24,7 +25,7 @@ class user extends StatelessWidget {
             ),
             Container(
 
-              child:RaisedButton(
+              child:MaterialButton(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                 child: Text(
                   "Customer",
@@ -42,7 +43,7 @@ class user extends StatelessWidget {
             ),
             Container(
 
-              child:RaisedButton(
+              child:MaterialButton(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                 child: Text(
                   "Driver",

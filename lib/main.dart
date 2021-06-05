@@ -1,22 +1,27 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'package:google_maps_webservice/places.dart';
-import 'package:taxi2/user.dart';
+
 import 'MainScreen.dart';
 import 'Drivers.dart';
-import 'LocationCustomer/LocationC.dart';
 
-Future <void> main()async
-{ WidgetsFlutterBinding.ensureInitialized();
+
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   runApp(MyApp());
 }
 List<Drivers> dataList=[];
 DatabaseReference usersRef=FirebaseDatabase.instance.reference().child("Customers");
 DatabaseReference usersRef2=FirebaseDatabase.instance.reference().child("Drivers");
+DatabaseReference rideRequest=FirebaseDatabase.instance.reference().child("Ride Request");
+
+
+
 const kGoogleApiKey = "AIzaSyCgNdI4otkEM7ONrqh2BbUQ8TTDIosMUhk";
 
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
@@ -37,7 +42,7 @@ class  _MyAppState extends State<MyApp>
   @override
   Widget build(BuildContext flcontext) {
     return
-       MaterialApp(
+       GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Main ',
         theme: ThemeData(

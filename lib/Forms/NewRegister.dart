@@ -38,6 +38,8 @@ class NewRegister
         "email":emailTextEditingController.text.trim(),
         "password":passwordTextEditingController.text.trim(),
         "phone":phoneTextEditingController.text.trim(),
+        "status":"Available",
+        "address":dropdownValue
 
       };
       usersRef2.child(_newdriv.uid).set(cusDataMap);

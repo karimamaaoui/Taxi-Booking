@@ -7,6 +7,7 @@ import 'package:taxi2/Home.dart';
 import 'package:taxi2/Widget/progressDialog.dart';
 import 'file:///C:/Users/asus/AndroidStudioProjects/taxi2/lib/UsersSide/RegisterScreenDriver.dart';
 import 'package:taxi2/main.dart';
+import 'package:taxi2/Drivers/DriverHome.dart';
 
 class loginScreenDriver extends StatefulWidget {
   @override
@@ -184,7 +185,7 @@ class _LoginScreenDriverState extends State<loginScreenDriver> {
       {
         if(snap.value!=null)
         {
-          Navigator.pushReplacement(ctx1, MaterialPageRoute(builder: (context)=>Home()));
+          Navigator.pushReplacement(ctx1, MaterialPageRoute(builder: (context)=>DriverHome()));
           displayToastMessage("You are logged now  ",ctx1);
 
         }

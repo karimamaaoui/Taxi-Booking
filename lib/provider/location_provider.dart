@@ -2,6 +2,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
+
+
 class location_provider extends ChangeNotifierProvider{
 
   Location _location;

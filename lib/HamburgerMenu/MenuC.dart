@@ -5,7 +5,7 @@ import 'package:taxi2/UsersSide/Profiles/Body.dart';
 import 'package:taxi2/Widget/DividerWidget.dart';
 import 'file:///C:/Users/asus/AndroidStudioProjects/taxi2/lib/UsersSide/Profiles/ProfileScreen.dart';
 
-class Menu extends StatelessWidget {
+class MenuC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -83,13 +83,13 @@ class Menu extends StatelessWidget {
       case 1:
 
         Navigator.push(context,
-            MaterialPageRoute(builder: (context)=>ProfileScreen()));
+            MaterialPageRoute(builder: (context)=>Body()));
 
         break;
       case 2:
 
         Navigator.push(context,
-            MaterialPageRoute(builder: (context)=>ProfileScreen()));
+            MaterialPageRoute(builder: (context)=>Body()));
 
         break;
 

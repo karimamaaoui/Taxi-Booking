@@ -1,64 +1,171 @@
 
 import 'dart:async';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'searchLocation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:taxi2/Assisants/assistantMethods.dart';
 import 'package:taxi2/HamburgerMenu/Menu.dart';
+import 'package:taxi2/LocationCustomer/JoinCollection.dart';
+import 'package:taxi2/LocationCustomer/listOfCars.dart';
 import 'package:taxi2/MainScreen.dart';
-import 'package:taxi2/Maps/listOfMaps.dart';
 import 'package:taxi2/Widget/DividerWidget.dart';
 import 'ConvertLocation.dart';
 import 'package:taxi2/LocationCustomer/searchScreen.dart';
+import 'package:taxi2/LocationCustomer/PushNotification.dart';
+import 'package:taxi2/HamburgerMenu/MenuC.dart';
 
 class LocationC extends StatefulWidget{
 
   @override
   _LocationCState  createState()=> _LocationCState ();
-
+    LocationC({currentPosition,markpos,price});
 }
 
 class _LocationCState extends State<LocationC>
 {
+
+  DatabaseReference rideRequestRef;
+
+
+   void saveRequest()
+  {
+    rideRequestRef=FirebaseDatabase.instance.reference().child("Ride Requests").push();
+
+    Map pickUpLocMap =
+    {
+      "latitude":currentPosition.latitude.toString(),
+      "longitude":currentPosition.longitude.toString(),
+
+    };
+
+    Map dropOffLocMap =
+    {
+      "latitude":markpos.latitude.toString(),
+      "longitude":markpos.longitude.toString(),
+
+    };
+
+    Map rideInfo={
+      "driver_id":"waiting",
+      "payment_method" :"cash",
+      "pickup":pickUpLocMap,
+      "dropOf":dropOffLocMap,
+      "created_at":DateTime.now().toString(),
+      "ride_email":email,
+
+    };
+
+    rideRequestRef.set(rideInfo);
+
+  }
+
+  void cancelRequest()
+  {
+    rideRequestRef.remove();
+  }
+
+
+
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController newGoogleMapController;
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey:"AIzaSyCgNdI4otkEM7ONrqh2BbUQ8TTDIosMUhk" );
-
+String idx;
+  String price;
   Position currentPosition;
   var geoLocator=Geolocator();
   double bottomPaddingOfMap=0;
   Address addressC;
   Address addressMark;
-
+String dvEmail;
+  String uid;
+  String email;
   String addr1="";
   String addr2="";
   String addr3="";
   double distance;
   final LatLng _center = const LatLng(33.892166, 9.561555499999997);
 
+  get size => 18;
+
+  var locationDistance;
+
   calculDistance()async
   {
-    double dis=0;
-    for (int i=0; i<MyPolylines.length;i++)
+    double distanceInMeters = await Geolocator.distanceBetween(
+      currentPosition.latitude,
+      currentPosition.longitude,
+      markpos.latitude,
+      markpos.longitude
+    );
+    var kilo=distanceInMeters/1000;
+  print(distanceInMeters);
+  print(kilo);
+  print(currentPosition.toString());
+  print(markpos.toString());
+  distance=distanceInMeters;
+  print(distance);
+
+  if(distanceInMeters <=300)
+    {
+      price="TND 2500";
+
+    }
+  else
+  if(distanceInMeters>300 && distanceInMeters<=600)
+    {
+      price="TND 3000";
+    }
+
+    else if(distanceInMeters>600 && distanceInMeters<=1000 )
       {
-         dis+= await Geolocator.distanceBetween(
-            currentPosition.latitude, currentPosition.longitude,
-            markpos.latitude, markpos.longitude);
-        print(dis);
+        price="TND 4000";
 
       }
-    distance=dis;
+  else if(distanceInMeters>1000 && distanceInMeters<=3000)
+  {
+    price="TND 6000";
 
+  }
 
+  else if( distanceInMeters>3000 && distanceInMeters<=6000)
+  {
+    price="TND 10000";
+
+  }
+  else if(distanceInMeters>6000 && distanceInMeters<9000)
+  {
+    price="TND 12000";
+
+  }
+
+  else if(distanceInMeters>9000 && distanceInMeters<=12000)
+  {
+    price="TND 16000";
+
+  }
+
+  else if(distanceInMeters>12000 && distanceInMeters<=20000)
+  {
+    price="TND 20000";
+
+  }
+
+  else if(distanceInMeters>20000 && distanceInMeters<=23500)
+  {
+    price="TND 24000";
+
+  }
+  else{
+    price="TND 28000";
+  }
+
+    print(price);
   }
 
   getAddressbasedOnLocation() async
@@ -82,11 +189,16 @@ class _LocationCState extends State<LocationC>
   }
   Location location1;
 
+
   @override
   void initState()
   {
     super.initState();
     getAddressbasedOnLocation();
+    uid = FirebaseAuth.instance.currentUser.uid;
+    email = FirebaseAuth.instance.currentUser.email;
+
+    print(uid);
   }
 
   void locatePosition ()async{
@@ -107,6 +219,15 @@ class _LocationCState extends State<LocationC>
 
   }
 
+  DatabaseReference markerRef;
+/*
+  void saveMarker()
+  {
+    markerRef=FirebaseDatabase.instance.reference().child("Markers").push();
+    markerRef.set(myMarker.toString());
+
+  }
+*/
   List<Marker> myMarker =[];
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng (33.892166,9.561555499999997),
@@ -115,8 +236,10 @@ class _LocationCState extends State<LocationC>
   GlobalKey <ScaffoldState> scaffoldKey=new GlobalKey<ScaffoldState>();
 
   LatLng markpos;
-
+  Location  place;
   String mark="";
+  BitmapDescriptor pinLocationIcon;
+
   handleTap(LatLng tappedPoint) async
   {
     print(tappedPoint);
@@ -133,19 +256,347 @@ class _LocationCState extends State<LocationC>
         Marker(markerId: MarkerId(tappedPoint.toString()),
         position: tappedPoint,
         draggable: true,
-
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        onDragEnd: (dragEndPosition)
+
+            onDragEnd: (dragEndPosition)
             {
               print(dragEndPosition);
             }
 
 
+        ),
+          );
+      myMarker.add(
+
+          Marker(
+              markerId:MarkerId('id1'),
+              position:LatLng( currentPosition.latitude,currentPosition.longitude),
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+
+      ),);
+
+      BitmapDescriptor.fromAssetImage(
+          ImageConfiguration(devicePixelRatio: 3.5, ),
+          'assets/images/taximark.ico',).then((onValue) {
+        pinLocationIcon = onValue;
+      });
+      myMarker.add(
+        Marker(
+         markerId:MarkerId('car1'),
+          position:LatLng(36.805299,10.170632),
+          icon:pinLocationIcon,
+          onTap: (){
+
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => searchScreen()));
+
+          }
         )
       );
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car2'),
+            position:LatLng(36.802412,10.175117),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+          )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car3'),
+            position:LatLng(36.814507,10.189202),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+          )
+      );
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car4'),
+            position:LatLng(36.757591,10.280833),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+          )
+      );
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car5'),
+            position:LatLng(36.737784,10.260092),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+          )
+      );
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car6'),
+            position:LatLng(36.736133,10.307502),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car7'),
+            position:LatLng(36.727328,10.342544),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car8'),
+            position:LatLng(36.708064,10.374838),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car9'),
+            position:LatLng(36.727328,10.342544),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car10'),
+            position:LatLng(36.694851,10.166646),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car11'),
+            position:LatLng(36.673926,10.151529),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car12'),
+            position:LatLng(36.801210,10.176002),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car13'),
+            position:LatLng(36.795711,10.175959),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+
+      myMarker.add(
+      Marker(
+        markerId:MarkerId('car14'),
+        position:LatLng(36.799140,10.175260),
+        icon:pinLocationIcon,
+          onTap: (){
+
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => searchScreen()));
+
+          }
+
+      )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car15'),
+            position:LatLng(36.752020,10.265607),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car16'),
+            position:LatLng(36.765636,10.260626),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car17'),
+            position:LatLng(36.763126,10.266619),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car18'),
+            position:LatLng(36.762370,10.268358),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car19'),
+            position:LatLng(36.761235,10.270215),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car20'),
+            position:LatLng(36.761235,10.270215),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+          )
+      );
+      myMarker.add(
+          Marker(
+            markerId:MarkerId('car21'),
+            position:LatLng(36.763152,10.272154),
+            icon:pinLocationIcon,
+              onTap: (){
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => searchScreen()));
+
+              }
+
+
+          ),
+
+      );
+
+
       mark=addressMark.addressLine;
       markpos=tappedPoint;
       addPolyLine();
+
+
     });
   }
 
@@ -168,7 +619,8 @@ class _LocationCState extends State<LocationC>
                 LatLng(markpos.latitude,markpos.longitude),
         ],
 
-      )
+      ),
+
     );
 
   }
@@ -207,7 +659,7 @@ class _LocationCState extends State<LocationC>
             ],
           ),
           drawer: Container(
-            child: Menu(),
+            child: MenuC(),
           ),
 
       body: Container(
@@ -216,13 +668,16 @@ class _LocationCState extends State<LocationC>
               GoogleMap(
                 padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
                 mapType: MapType.normal,
+
                   myLocationEnabled: true,
                   initialCameraPosition: _kGooglePlex ,
                   myLocationButtonEnabled: true,
                   zoomGesturesEnabled: true,
                   zoomControlsEnabled: true,
+
                   markers:
                   Set.from(myMarker),
+
                   onTap: handleTap,
                   polylines: MyPolylines.toSet(),
                   onMapCreated: (GoogleMapController controller)
@@ -237,6 +692,7 @@ class _LocationCState extends State<LocationC>
 
 
                     locatePosition();
+
                   },
             ),
 
@@ -282,6 +738,7 @@ class _LocationCState extends State<LocationC>
                     child: Text("Show",style: TextStyle(fontSize: 20),),
                     onPressed: (){
                       onBottomPressed(context);
+                      //saveMarker();
                     }
                 ),
             ),
@@ -293,56 +750,98 @@ class _LocationCState extends State<LocationC>
   ),
 );
   }
+  
   void onBottomPressed(BuildContext context)
   {
     showModalBottomSheet(
         context: context,backgroundColor: Colors.transparent,
         builder: (context){
-          return FittedBox(
+          return Expanded(
+            child: FittedBox(
 
-            child: Container(
+              child: Container(
 
-              child: Positioned(
-                  left: 0.0,
-                  right: 0.0,
-                  bottom: 0.0,
-                  child: Container(
-                    height: 300.0,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(255,238,120,1),
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0),topRight:Radius.circular(18.0) ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 16.0,
-                          spreadRadius: 0.5,
-                          offset:Offset(0.7,0.7),
+                child: Positioned(
+                    left: 0.0,
+                    right: 0.0,
+                    bottom: 0.0,
+                    child: Container(
+                      height: 400,
 
-                        )
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 18.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 6.0,),
-                          Text("Hi there ",style: TextStyle(fontSize:14.0),),
-                          Text("Where To ? ",style: TextStyle(fontSize:20.0 ,fontFamily: "Brand-Bold"),),
-                          SizedBox(height: 20.0,),
-                          GestureDetector(
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(255,238,120,1),
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0),topRight:Radius.circular(18.0) ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 16.0,
+                            spreadRadius: 0.5,
+                            offset:Offset(0.7,0.7),
 
-
-                              onTap: () {
-                                Navigator.push(context,
-                                  MaterialPageRoute(builder: (context)=>searchScreen()));
-                              },
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 18.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 6.0,),
+                            GestureDetector(
+                                onTap: calculDistance,
+                                child: Text("Hi there ",style: TextStyle(fontSize:14.0),)),
+                            Text("Where To ? ",style: TextStyle(fontSize:20.0 ,fontFamily: "Brand-Bold"),),
+                            SizedBox(height: 20.0,),
+                            GestureDetector(
 
 
-                            child: Container(
-                              width: 390,
+                                onTap: () {
+                                  Navigator.push(context,
+                                    MaterialPageRoute(builder: (context)=>searchScreen(currentPosition:this.currentPosition,markpos:this.markpos,price:this.price,idx: this.idx,dvEmail: this.dvEmail,)));
+                                  //saveRequest();
+                                },
+
+                              
+                              child: Expanded(
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height*0.1,
+                                 // width: MediaQuery.of(context).size.width*1.5,
+
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(249,184,187,1),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black54,
+                                        blurRadius: 6.0,
+                                        spreadRadius: 0.5,
+                                        offset:Offset(0.7,0.7),
+
+                                      )
+                                    ],
+                                  ),
+                                  child: Padding(
+
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Container(
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.search,color: Colors.black,),
+                                          SizedBox(width: 10.0,),
+                                          Text("Search Drop Off ${mark}",style: TextStyle(color:Colors.black54,fontSize: 18.0))
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20.0,),
+                            Container(
+                              //width: MediaQuery.of(context).size.width*1.5,
+                              height: MediaQuery.of(context).size.height*0.1,
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(249,184,187,1),
+                                color: Color.fromRGBO(253,235,197,1),
                                 borderRadius: BorderRadius.circular(5.0),
                                 boxShadow: [
                                   BoxShadow(
@@ -353,92 +852,34 @@ class _LocationCState extends State<LocationC>
 
                                   )
                                 ],
-                              ),
-                              child: Padding(
 
-                                padding: const EdgeInsets.all(12.0),
-                                child: Container(
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.search,color: Colors.black,),
-                                      SizedBox(width: 10.0,),
-                                      Text("Search Drop Off ${mark}")
-                                    ],
+                              ),
+
+                              child: Row(
+                                children:[
+
+                                  Icon(Icons.home, color: Colors.grey,),
+                                  SizedBox(width: 12.0, ),
+                                  Text(
+                                      "Currently Place -   ${addr2} ",style: TextStyle(color:Colors.black54,fontSize: 18.0)
                                   ),
-                                ),
+                                  SizedBox(width: 30.0,),
+
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(height: 20.0,),
-                          Container(
-                            width: 390,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(253,235,197,1),
-                              borderRadius: BorderRadius.circular(5.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black54,
-                                  blurRadius: 6.0,
-                                  spreadRadius: 0.5,
-                                  offset:Offset(0.7,0.7),
-
-                                )
-                              ],
-
-                            ),
-
-                            child: Row(
-                              children:[
-
-                                Icon(Icons.home, color: Colors.grey,),
-                                SizedBox(width: 12.0, ),
-                                Text(
-                                    "Currently Place -   ${addr2} ",style: TextStyle(color:Colors.black54,fontSize: 12.0)
-                                ),
-                                SizedBox(width: 30.0,),
-
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10.0,),
-                          DividerWidget(),
-                          SizedBox(height: 16.0,),
-
-                          Container(
-                            width: 390,
-                            decoration: BoxDecoration(
-                            color: Color.fromRGBO(205,236,169,1),
-                            borderRadius: BorderRadius.circular(5.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black54,
-                                blurRadius: 6.0,
-                                spreadRadius: 0.5,
-                                offset:Offset(0.7,0.7),
-
-                              )
-                            ],
-
-                          ),
+                            SizedBox(height: 10.0,),
+                            DividerWidget(),
+                            SizedBox(height: 16.0,),
 
 
-                            child: Row(
-                              children: [
-                                Icon(Icons.work, ),
-                                SizedBox(width: 12.0,),
-                                Text("Add Work  "),
-                                SizedBox(height: 4.0,),
-                                Text("Your office adresse",style: TextStyle(color:Colors.black54,fontSize: 12.0),),
 
-                              ],
-                            ),
-                          ),
+                          ],
 
-                        ],
-
+                        ),
                       ),
-                    ),
-                  )
+                    )
+                ),
               ),
             ),
           );

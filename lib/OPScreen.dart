@@ -4,6 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'Forms/NewRegister.dart';
 import 'Home.dart';
+import 'package:taxi2/Drivers/DriverHome.dart';
+
+
+///***********Otp authentification page **************////
 class OTPScreen extends StatefulWidget {
   final String phone;
   OTPScreen(this.phone);
@@ -88,7 +92,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       _newRegister.registerNew(context);
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => Home()),
+                          MaterialPageRoute(builder: (context) => DriverHome()),
                               (route) => false);
                       displayToastMessage("New  account has created",context);
 
