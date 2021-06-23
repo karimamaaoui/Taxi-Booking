@@ -7,11 +7,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:taxi2/Assisants/assistantMethods.dart';
 import 'package:taxi2/HamburgerMenu/Menu.dart';
 import 'package:taxi2/LocationCustomer/ConvertLocation.dart';
+import 'package:taxi2/LocationCustomer/searchLocation.dart';
 import 'package:taxi2/MainScreen.dart';
+import 'package:taxi2/splash_screen/enbording_page.dart';
 
 class LocationDv extends StatefulWidget {
   @override
@@ -31,124 +34,21 @@ class _LocationDvState extends State<LocationDv> with WidgetsBindingObserver {
   String addr1="";
   String addr2="";
   String uid;
-  String uid1="M794EDCuq4VkKhUrGt2x4lgwbpx2";
-  String uid2="PaP8fhgkxnOwsCz8eOo4SQibyWS2";
-  String uid3="Pd8vlLiYySVIoid6VBFq9yLXtAG3";
-  String uid4="a3jVvPUqhogkzKMVpMoazhZPgvB3";
-  String uid5="m32IRXqjF1PqACc8nv6560gvuhO2";
   String email;
   BitmapDescriptor pinLocationIcon;
+  void changeEtat()async
+  {
+    await
+    rideRequestRef.child(uid).update({
+      'etat':"accept",
+    });
+
+  }
 
 
 GlobalKey <ScaffoldState> scaffoldKey=new GlobalKey<ScaffoldState>();
 
 
-  getAddressbasedOnLocation1() async
-  {
-    final coordinates = new Coordinates(36.727328,10.342544);
-    var addresses =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    ConvertLocation().convertCoordinatesToAddress(coordinates).then((value) =>
-    addressC = value);
-
-    setState(() {
-      addr2 = addresses.first.addressLine;
-      print(addr1);
-
-      ref.child(uid1).update({
-        'address':"${addr2}"
-      });
-
-    });
-  }
-
-
-  getAddressbasedOnLocation2() async
-  {
-    final coordinates= new Coordinates(36.802412,10.175117);
-    var addresses2 =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    ConvertLocation().convertCoordinatesToAddress(coordinates).then((value) =>
-    addressD2 = value);
-
-
-
-    setState(() {
-      addr1 = addresses2.first.addressLine;
-      addr2 = addresses2.first.addressLine;
-      print(addr1);
-
-      ref.child(uid2).update({
-        'address':"${addr2}"
-      });
-
-    });
-  }
-
-  getAddressbasedOnLocation3() async
-  {
-    final coordinates= new Coordinates(36.761235,10.270215);
-    var addresses3 =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    ConvertLocation().convertCoordinatesToAddress(coordinates).then((value) =>
-    addressD2 = value);
-
-
-
-    setState(() {
-      addr1 = addresses3.first.addressLine;
-      addr2 = addresses3.first.addressLine;
-      print(addr1);
-
-      ref.child(uid3).update({
-        'address':"${addr2}"
-      });
-
-    });
-  }
-  getAddressbasedOnLocation4() async
-  {
-    final coordinates= new Coordinates(36.763152,10.272154);
-    var addresses3 =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    ConvertLocation().convertCoordinatesToAddress(coordinates).then((value) =>
-    addressD2 = value);
-
-
-
-    setState(() {
-      addr1 = addresses3.first.addressLine;
-      addr2 = addresses3.first.addressLine;
-      print(addr1);
-
-      ref.child(uid4).update({
-        'address':"${addr2}"
-      });
-
-    });
-  }
-
-  getAddressbasedOnLocation5() async
-  {
-    final coordinates= new Coordinates(36.761235,10.270215);
-    var addresses3 =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    ConvertLocation().convertCoordinatesToAddress(coordinates).then((value) =>
-    addressD2 = value);
-
-
-
-    setState(() {
-      addr1 = addresses3.first.addressLine;
-      addr2 = addresses3.first.addressLine;
-      print(addr1);
-
-      ref.child(uid5).update({
-        'address':"${addr2}"
-      });
-
-    });
-  }
 
 
   @override
@@ -160,13 +60,7 @@ GlobalKey <ScaffoldState> scaffoldKey=new GlobalKey<ScaffoldState>();
       email = FirebaseAuth.instance.currentUser.email;
       print(uid);
       print(email);
-      getAddressbasedOnLocation1();
-      getAddressbasedOnLocation2();
-      getAddressbasedOnLocation3();
-      getAddressbasedOnLocation4();
-      getAddressbasedOnLocation5();
       uid = FirebaseAuth.instance.currentUser.uid;
-      setSatuts("Online");
       rideRequestRef.orderByChild("driver_id").equalTo(email).once().then((DataSnapshot snap)
       {
         var data=snap.value;
@@ -181,13 +75,15 @@ GlobalKey <ScaffoldState> scaffoldKey=new GlobalKey<ScaffoldState>();
             dropOf: value['dropOf'],
             price : value['price'],
             ride_email : value['ride_email'],
-
+            etat:value['etat'],
           );
           print(key);
-          print("qq");
-          print("aalllllllllllllllaa ${dataList.length}");
+          print("test");
+          print(" ${dataList.length}");
           dataList.add(requests);
         });
+
+
         setState(() {
 
         });
@@ -196,26 +92,19 @@ GlobalKey <ScaffoldState> scaffoldKey=new GlobalKey<ScaffoldState>();
 
 
     }
-  void setSatuts(String status)async
-  {
-    await
-    ref.child(uid).update({
-      'status':status,
-    });
-
-  }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  bool didChangeAppLifecycleState(AppLifecycleState state) {
     print('state = $state');
 
     if (state == AppLifecycleState.inactive)
     {
-      setSatuts("Online");
+     // setSatuts("Online");
+      /// **** ritha ha4i taw  bool isconnect awel may3ml log enti ta3ml update "isconnect" : true mouch hne khtr ma3ndh 3ale9A  bhy
     }
     else
     {
-      setSatuts("Offline");
+   //   setSatuts("Offline");
     }
   }
 
@@ -229,8 +118,11 @@ GlobalKey <ScaffoldState> scaffoldKey=new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+
+
+
     double height=MediaQuery.of(context).size.height;
-    double width=MediaQuery.of(context).size.width;
+    double width=MediaQuery.of(context).size.width ;
 
       void moveToTheLastScreen()
       {
@@ -245,25 +137,25 @@ GlobalKey <ScaffoldState> scaffoldKey=new GlobalKey<ScaffoldState>();
       child: Scaffold(
         key: this.scaffoldKey,
         appBar: AppBar(title: Text(''),
-      backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
+      backgroundColor:Colors.white,
         leading: IconButton(icon: Icon(Icons.arrow_back),
         onPressed: ()
           {moveToTheLastScreen();}
           ),
-        actions: [
+        actions: [///***** 7ot appbar kima paget elkol
           IconButton(
           icon: Icon(Icons.logout),
           onPressed: () async {
             await FirebaseAuth.instance.signOut();
             Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => MainScreen()),
+            MaterialPageRoute(builder: (context) => SplashScreen()),
             (route) => false);
             },
           )
       ],
       ),
-        drawer: Container(
+        drawer: Container(/// ha4i ta3 9bila eli9otlk3liha hadhik aamla feha menu fih profile w log out fergha
           child: Menu(),
         ),
 
@@ -303,225 +195,246 @@ GlobalKey <ScaffoldState> scaffoldKey=new GlobalKey<ScaffoldState>();
                     ),
                   ),
                 ),
+
                 Center(
                   child: Container(
-                    height: height*0.7,
-                    width: width* 0.88,
+                      height: height*0.7,
+                    width: width * 9.0,
                     padding: EdgeInsets.only(top:50),
                     alignment: Alignment.center,
 
                     child:  dataList.length==0?
-                    Text("No Data ",style: TextStyle(color: Colors.lightGreen),):
-                    ListView.builder(itemCount: dataList.length,itemBuilder: (_,index)
-                    {
-                      return CardUi(dataList[index].distance,dataList[index].driver_id,
-                          dataList[index].pickup,dataList[index].dropOf,dataList[index].price,dataList[index].ride_email,context
-                      );
+                    Center(child: Text("No Data ",style: TextStyle(color: Colors.lightGreen),)):
+                    Container(
+                      child: ListView.builder(itemCount: dataList.length,itemBuilder: (_,index)
+                      {
+                        return CardUi(dataList[index].distance,dataList[index].driver_id,
+                            dataList[index].pickup,dataList[index].dropOf,dataList[index].price,dataList[index].ride_email,dataList[index].etat,context,
 
-                    } ,
+                        );
+                      } ,
+                      ),
                     ) ,
 
+
                   ),
-                )
+
+                ),
 
               ]
-      )
+
+      ),
+
       ),
 
       ));
     }
-}
-const kLightPrimaryColor = Color(0xFFFFFFFF);
 
-Widget CardUi(double distance,var driver_id,var pickup,var dropOf,var price,var ride_email,BuildContext ctx)
-{
-  double height=MediaQuery.of(ctx).size.height;
-  double width=MediaQuery.of(ctx).size.width;
-  return
-    Card(
-      clipBehavior: Clip.antiAlias,
-      shadowColor: Colors.amber,
-      elevation: 8,
-      margin: EdgeInsets.all(30),
-      shape:RoundedRectangleBorder(
-        borderRadius:BorderRadius.circular(16),
-      ),
-      child: Container(
-        //color: kDarkSecondaryColor,
-        margin: EdgeInsets.all(1.5),
-        padding: EdgeInsets.only(top:30),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors:[
-              Colors.amber[900],
-              Colors.amber[700]
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+
+  Widget CardUi(double distance,var driver_id,var pickup,var dropOf,var price,var ride_email,var etat,BuildContext ctx)
+  {
+
+
+    double height=MediaQuery.of(ctx).size.height;
+    double width=MediaQuery.of(ctx).size.width;
+    return
+      Card(
+        clipBehavior: Clip.antiAlias,
+        shadowColor: Colors.amber,
+        elevation: 8,
+        margin: EdgeInsets.all(30),
+        shape:RoundedRectangleBorder(
+          borderRadius:BorderRadius.circular(16),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(30),
+        child: Container(
+          //color: kDarkSecondaryColor,
+          margin: EdgeInsets.all(1.5),
+          padding: EdgeInsets.only(top:30),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors:[
+                Colors.amber[300],
+                Colors.amber[600]
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(30),
 
-              child: Column(
-                children: [
-                   CustomPaint(
+                child: Column(
+                  children: [
+                    CustomPaint(///****zayda taswira w 9asan mta3ha
                       size:Size(100,100),
                       painter:CardCustomPaint(
 
                       ),
-                     child:Column(
-                       children: [
-                         Positioned(
-                           bottom: 10,
-                           left: 10,
-                           child: Image.asset(
-                             'assets/images/img.png',
-                             color: Colors.red.withOpacity(0.3),
-                             width: width*0.5 ,
-                           ),
-                         ),
-                     SizedBox(
-                       height: 30,
-                     ),
-                     Center(
-                       child: Image.asset(
-                         'assets/images/eye.png',
-                         color: Colors.white70,
-                         width: width * 0.25,
-                       ),),
-                         Text(
-                           'Requests List',
-                           style: TextStyle(
-                             color: Colors.black,
-                             fontSize: 25,
-                             fontWeight: FontWeight.bold,
-                           ),
-                         ),
-                         SizedBox(
-                           height: 10,
-                         ),
-                       ],
-                     ),
-
-
-                  ),
-                  Positioned(
-                    width: width*0.3,
-                    height: height*0.4,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 12,
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(top:10.0),
-                          child: Row(
-                            children: [
-                              // SizedBox (width: 20,),
-                              Icon(Icons.location_on),
-                              Text("Distance ${distance}",
-                                style: TextStyle(fontSize: 20,
-                                    color: kLightPrimaryColor,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: -1
-                                ),),
-                            ],
+                      child:Column(
+                        children: [
+                          Positioned(
+                            bottom: 10,
+                            left: 10,
+                            child: Image.asset(
+                              'assets/images/img.png',
+                              color: Colors.red.withOpacity(0.3),
+                              width: width*0.5 ,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 12,
-
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top:10.0),
-                          child:
-                          Row(
-                            children: [
-                              Text(driver_id,style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
-                            ],
+                          SizedBox(
+                            height: 30,
                           ),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(top:10.0),
-                          child:
-                          Row(
-                            children: [
-                              Text("PickUP : ${pickup} ",style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
-                            ],
+                          Center(
+                            child: Image.asset(
+                              'assets/images/eye.png',
+                              color: Colors.white70,
+                              width: width * 0.25,
+                            ),),
+                          Text(
+                              'Requests List',
+                              style: Theme.of(ctx).textTheme.headline5
                           ),
-                        ),
-
-                        SizedBox(
-                          height: 12,
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(top:10.0),
-                          child:
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text("Destination : \n ${dropOf}",style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
-                            ],
+                          SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
+                        ],
+                      ),
 
-                        Padding(
-                          padding: const EdgeInsets.only(top:10.0),
-                          child:
-                          Row(
-                            children: [
-                              Text("price : ${price }",style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
-                            ],
-                          ),
-                        ),
-                        Padding(
 
-                          padding: const EdgeInsets.only(top:10.0),
-                          child:
-                          Row(
-
-                            children: [
-                              Icon(Icons.email),
-
-                              Text(" Ride Email : \n ${ride_email}:",style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
-
-                            ],
-                          ),
-                        ),
-
-                      ],
                     ),
-                  ),
-                ],
+                    Positioned(
+                      width: width*0.80,
+                      height: height*0.4,
+                      child: Column(
+                        children: [
+
+                          Padding(
+                            padding: const EdgeInsets.only(top:20.0),
+                            child: Row(
+                              children: [
+                                // SizedBox (width: 20,),
+                                Icon(Icons.location_on),
+                                Text("Distance ${distance.toStringAsFixed(3)}",
+                                  style: TextStyle(fontSize: 20,
+                                      color: kLightPrimaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: -1
+                                  ),),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12,
+
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top:10.0),
+                            child:
+                            Row(
+                              children: [
+                                Text(driver_id,style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top:10.0),
+                            child:
+                            Row(
+                              children: [
+                                Text("Pick Up :  \n ${pickup}",style: TextStyle(fontSize: 17,color: kLightPrimaryColor),),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: 12,
+
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top:10.0),
+                            child:
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("Destination : \n ${dropOf}",style: TextStyle(fontSize: 17,color: kLightPrimaryColor),),
+
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top:10.0),
+                            child:
+                            Row(
+                              children: [
+                                Text("price : ${price }",style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
+                              ],
+                            ),
+                          ),
+                          Padding(
+
+                            padding: const EdgeInsets.only(top:10.0),
+                            child:
+                            Row(
+
+                              children: [
+                                Icon(Icons.email),
+
+                                Text(" Ride Email : \n ${ride_email}:",style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
+
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12,
+
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top:10.0),
+                            child:
+                            Row(
+                              children: [
+                                Text("Etat Driver: ${etat}",style: TextStyle(fontSize: 20,color: kLightPrimaryColor),),
+                              ],
+                            ),
+                          ),
+
+
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
 
+
+  }
 
 }
 
+const kLightPrimaryColor = Color(0xFFFFFFFF);
+
 class Requests
 {
-  var driver_id,dropOf,pickup,price,ride_email;
+  var driver_id,dropOf,pickup,price,ride_email,etat;
   double distance;
-  Requests({this.distance,this.driver_id,this.dropOf,this.pickup,this.price,this.ride_email});
+  Requests({this.distance,this.driver_id,this.dropOf,this.pickup,this.price,this.ride_email,this.etat});
 }
 
 class CardCustomPaint extends CustomPainter{

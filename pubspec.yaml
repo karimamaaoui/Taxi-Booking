@@ -49,14 +49,22 @@ dependencies:
   flutter_local_notifications:
   flutter_sms: ^2.3.1
   url_launcher: ^6.0.4
-  firebase_messaging: ^10.0.0
   dropdownfield: ^1.0.3
   intl:
   get:
+  shimmer:
+  keyboard_dismisser: ^2.0.0
+  lottie:
+  google_fonts:
+  proste_bezier_curve: ^2.0.1
+  flutter_launcher_icons: ^0.9.0
 
 
 
-
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
 
 
 
@@ -110,6 +118,10 @@ flutter:
     - assets/images/2.png
     - assets/images/eye.png
     - assets/images/img.png
+    - assets/3870-taxi.json
+    - assets/23521-taxi-app-starter-screen-animation.json
+    - assets/logout-svgrepo-com.svg
+    - assets/images/OIP.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

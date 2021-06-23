@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taxi2/OPScreen.dart';
 import '../loginScreenDriver.dart';
@@ -12,7 +12,7 @@ class RegisterForm  extends StatefulWidget {
 
 List <String> listOfCountries =<String> ["Tunisia", "Bizerte", "Sousse","Ben Arous"];
 var dropdownValue ;
-
+/*
 TextEditingController nameTextEditingController = TextEditingController();
 TextEditingController emailTextEditingController = TextEditingController();
 TextEditingController passwordTextEditingController = TextEditingController();
@@ -21,7 +21,7 @@ TextEditingController phoneTextEditingController = TextEditingController();
 
 String email, password, name, phone;
 var index;
-
+*/
 
 class _RegisterFormState extends State<RegisterForm> {
 
@@ -232,5 +232,5 @@ class _RegisterFormState extends State<RegisterForm> {
 displayToastMessage(String message,BuildContext ctx1)
 {
   Fluttertoast.showToast(msg: message);
-}
+}*/
 

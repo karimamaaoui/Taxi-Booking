@@ -4,6 +4,7 @@ import 'package:taxi2/MainScreen.dart';
 import 'package:taxi2/UsersSide/Profiles/Body.dart';
 import 'package:taxi2/Widget/DividerWidget.dart';
 import 'file:///C:/Users/asus/AndroidStudioProjects/taxi2/lib/UsersSide/Profiles/ProfileScreen.dart';
+import 'package:taxi2/splash_screen/enbording_page.dart';
 
 class MenuC extends StatelessWidget {
   @override
@@ -96,7 +97,7 @@ class MenuC extends StatelessWidget {
       case 3:
 
         Navigator.push(context,
-            MaterialPageRoute(builder: (context)=>MainScreen()));
+            MaterialPageRoute(builder: (context)=>SplashScreen()));
 
         break;
 

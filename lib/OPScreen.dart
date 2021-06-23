@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:taxi2/pages/home/home_page_driver.dart';
 import 'Forms/NewRegister.dart';
 import 'Home.dart';
 import 'package:taxi2/Drivers/DriverHome.dart';
@@ -43,7 +44,7 @@ class _OTPScreenState extends State<OTPScreen> {
       key: _scaffoldkey,
       appBar: AppBar(
         title: Text('OTP Verification'),
-        backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
+        backgroundColor: Colors.white,
         leading: IconButton(icon: Icon(Icons.arrow_back),
         onPressed: (){moveToTheLastScreen();}
 
@@ -92,7 +93,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       _newRegister.registerNew(context);
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => DriverHome()),
+                          MaterialPageRoute(builder: (context) => HomePageDriver()),
                               (route) => false);
                       displayToastMessage("New  account has created",context);
 
@@ -126,7 +127,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => Home()),
+                  MaterialPageRoute(builder: (context) => HomePageDriver()),
                       (route) => false);
 
             }

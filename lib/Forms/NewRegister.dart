@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taxi2/Widget/progressDialog.dart';
-import 'RegisterDriverForm.dart';
+import 'package:taxi2/pages/sign_up/driver_sign_up/drivers_sign_up.dart';
 import '../main.dart';
 
 class NewRegister
@@ -22,8 +22,8 @@ class NewRegister
     );
 
     final User _newdriv = (await _firebaseAuth.createUserWithEmailAndPassword
-      (email: emailTextEditingController.text,
-      password: passwordTextEditingController.text,
+      (email: email.text,
+      password: password.text,
     ).catchError((errMsg){
       displayToastMessage("Error "+errMsg.toString(), ctx);
     })
@@ -34,10 +34,10 @@ class NewRegister
     {
 
       Map cusDataMap={
-        "name":nameTextEditingController.text.trim(),
-        "email":emailTextEditingController.text.trim(),
-        "password":passwordTextEditingController.text.trim(),
-        "phone":phoneTextEditingController.text.trim(),
+        "name":name.text.trim(),
+        "email":email.text.trim(),
+        "password":password.text.trim(),
+        "phone":phone.text.trim(),
         "status":"Available",
         "address":dropdownValue
 

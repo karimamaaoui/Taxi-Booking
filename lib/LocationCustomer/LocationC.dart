@@ -10,14 +10,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:taxi2/Assisants/assistantMethods.dart';
-import 'package:taxi2/HamburgerMenu/Menu.dart';
-import 'package:taxi2/LocationCustomer/JoinCollection.dart';
-import 'package:taxi2/LocationCustomer/listOfCars.dart';
 import 'package:taxi2/MainScreen.dart';
 import 'package:taxi2/Widget/DividerWidget.dart';
+import 'package:taxi2/splash_screen/enbording_page.dart';
 import 'ConvertLocation.dart';
 import 'package:taxi2/LocationCustomer/searchScreen.dart';
-import 'package:taxi2/LocationCustomer/PushNotification.dart';
 import 'package:taxi2/HamburgerMenu/MenuC.dart';
 
 class LocationC extends StatefulWidget{
@@ -219,15 +216,6 @@ String dvEmail;
 
   }
 
-  DatabaseReference markerRef;
-/*
-  void saveMarker()
-  {
-    markerRef=FirebaseDatabase.instance.reference().child("Markers").push();
-    markerRef.set(myMarker.toString());
-
-  }
-*/
   List<Marker> myMarker =[];
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng (33.892166,9.561555499999997),
@@ -285,12 +273,6 @@ String dvEmail;
          markerId:MarkerId('car1'),
           position:LatLng(36.805299,10.170632),
           icon:pinLocationIcon,
-          onTap: (){
-
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => searchScreen()));
-
-          }
         )
       );
       myMarker.add(
@@ -298,12 +280,7 @@ String dvEmail;
             markerId:MarkerId('car2'),
             position:LatLng(36.802412,10.175117),
             icon:pinLocationIcon,
-              onTap: (){
 
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
           )
       );
 
@@ -312,12 +289,7 @@ String dvEmail;
             markerId:MarkerId('car3'),
             position:LatLng(36.814507,10.189202),
             icon:pinLocationIcon,
-              onTap: (){
 
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
           )
       );
       myMarker.add(
@@ -325,12 +297,7 @@ String dvEmail;
             markerId:MarkerId('car4'),
             position:LatLng(36.757591,10.280833),
             icon:pinLocationIcon,
-              onTap: (){
 
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
           )
       );
       myMarker.add(
@@ -338,12 +305,7 @@ String dvEmail;
             markerId:MarkerId('car5'),
             position:LatLng(36.737784,10.260092),
             icon:pinLocationIcon,
-              onTap: (){
 
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
           )
       );
       myMarker.add(
@@ -351,12 +313,6 @@ String dvEmail;
             markerId:MarkerId('car6'),
             position:LatLng(36.736133,10.307502),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -365,12 +321,6 @@ String dvEmail;
             markerId:MarkerId('car7'),
             position:LatLng(36.727328,10.342544),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -380,12 +330,6 @@ String dvEmail;
             markerId:MarkerId('car8'),
             position:LatLng(36.708064,10.374838),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -396,12 +340,6 @@ String dvEmail;
             markerId:MarkerId('car9'),
             position:LatLng(36.727328,10.342544),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -412,12 +350,6 @@ String dvEmail;
             markerId:MarkerId('car10'),
             position:LatLng(36.694851,10.166646),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -428,12 +360,6 @@ String dvEmail;
             markerId:MarkerId('car11'),
             position:LatLng(36.673926,10.151529),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -443,12 +369,6 @@ String dvEmail;
             markerId:MarkerId('car12'),
             position:LatLng(36.801210,10.176002),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -459,12 +379,6 @@ String dvEmail;
             markerId:MarkerId('car13'),
             position:LatLng(36.795711,10.175959),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -475,12 +389,6 @@ String dvEmail;
         markerId:MarkerId('car14'),
         position:LatLng(36.799140,10.175260),
         icon:pinLocationIcon,
-          onTap: (){
-
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => searchScreen()));
-
-          }
 
       )
       );
@@ -490,12 +398,6 @@ String dvEmail;
             markerId:MarkerId('car15'),
             position:LatLng(36.752020,10.265607),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -505,12 +407,6 @@ String dvEmail;
             markerId:MarkerId('car16'),
             position:LatLng(36.765636,10.260626),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -520,12 +416,6 @@ String dvEmail;
             markerId:MarkerId('car17'),
             position:LatLng(36.763126,10.266619),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -535,12 +425,6 @@ String dvEmail;
             markerId:MarkerId('car18'),
             position:LatLng(36.762370,10.268358),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -550,12 +434,6 @@ String dvEmail;
             markerId:MarkerId('car19'),
             position:LatLng(36.761235,10.270215),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -565,12 +443,6 @@ String dvEmail;
             markerId:MarkerId('car20'),
             position:LatLng(36.761235,10.270215),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
           )
       );
@@ -579,12 +451,6 @@ String dvEmail;
             markerId:MarkerId('car21'),
             position:LatLng(36.763152,10.272154),
             icon:pinLocationIcon,
-              onTap: (){
-
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => searchScreen()));
-
-              }
 
 
           ),
@@ -641,7 +507,9 @@ String dvEmail;
         child: Scaffold(
           key: this.scaffoldKey,
           appBar: AppBar(title: Text(''),
-            backgroundColor: Color.fromRGBO(240, 160, 50, 1.0),
+            backgroundColor:  Colors.white,
+              elevation: 0.0,
+
             leading: IconButton(icon: Icon(Icons.arrow_back),
                 onPressed: (){moveToTheLastScreen();}
             ),
@@ -652,7 +520,7 @@ String dvEmail;
                   await FirebaseAuth.instance.signOut();
                   Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => MainScreen()),
+                      MaterialPageRoute(builder: (context) => SplashScreen()),
                           (route) => false);
                 },
               )
@@ -734,12 +602,26 @@ String dvEmail;
               right: 0.0,
               bottom: 0.0,
               child: Container(
-                child: RaisedButton(
-                    child: Text("Show",style: TextStyle(fontSize: 20),),
-                    onPressed: (){
-                      onBottomPressed(context);
-                      //saveMarker();
-                    }
+
+
+                child:
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        side:BorderSide(color:Colors.white )
+                      ),
+                        color: Colors.yellow,
+                        child: Text("Show",style: Theme.of(context).textTheme.headline6.copyWith(
+                            color: Colors.black,fontSize: 20)),
+                        onPressed: (){
+                          onBottomPressed(context);
+                          //saveMarker();
+                        }
+                    ),
+                  ],
                 ),
             ),
         ),

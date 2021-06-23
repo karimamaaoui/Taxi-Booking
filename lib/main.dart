@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:google_maps_webservice/places.dart';
+import 'file:///C:/Users/asus/AndroidStudioProjects/taxi2/lib/splash_screen/enbording_page.dart';
 
 import 'MainScreen.dart';
 import 'Drivers.dart';
@@ -45,11 +46,21 @@ class  _MyAppState extends State<MyApp>
        GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Main ',
-        theme: ThemeData(
+       defaultTransition: Transition.fadeIn,
+       /* theme: ThemeData(
           primarySwatch: Colors.yellow,
         ),
        // initialRoute: FirebaseAuth.instance.currentUser==null ? user():MainScreen().key,
-        home: MainScreen(),
-      );
+        home: MainScreen(),*/
+         theme: ThemeData(
+           primaryColor: Colors.white,
+           appBarTheme: AppBarTheme(
+             elevation: 0.0,
+           ),
+         ),
+         themeMode: ThemeMode.dark,
+         home:SplashScreen(),
+
+       );
   }
 }

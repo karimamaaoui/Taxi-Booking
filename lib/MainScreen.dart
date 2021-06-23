@@ -39,8 +39,8 @@ class _MainScreenState extends State<MainScreen> {
                 splashColor: Color.fromRGBO(240, 160, 50, 1.0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.2)),
                 onPressed: (){
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context)=>user()));
+                 /* Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context)=>user()));*/
                 },
               ),
 
@@ -52,3 +52,4 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 ///**** baathtlk c bon behi haw 9a3d nchouf nkaml nrj3 nkhdmhom 3andi w b3d nb3'lk badel w zid elcode ok behy
+///

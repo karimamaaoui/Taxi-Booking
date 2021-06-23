@@ -3,7 +3,9 @@ import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 
-
+///***ha4a masta3mltouch normlment ?? le mastaamltouch
+///mela na7it chniya kifh ejb localisation njib fl currentPostion w ki nenzel aal blza fl map nakhou l latlong mteeha w nconverteha l address
+///behi ha4ika ta3 list fena page ??
 class location_provider extends ChangeNotifierProvider{
 
   Location _location;

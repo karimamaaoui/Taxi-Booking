@@ -165,10 +165,11 @@ class _LoginScreenState extends State<loginScreen> {
   ));
 
 }
-final FirebaseAuth _firebaseAuth=FirebaseAuth.instance;
 displayToastMessage(String message, BuildContext ctx1) {
   Fluttertoast.showToast(msg: message);
 }
+  final FirebaseAuth _firebaseAuth=FirebaseAuth.instance;
+
 Login(BuildContext ctx1)async
 {
   showDialog(
